@@ -1,0 +1,15 @@
+﻿@model MvcThemes.Models.Index.IndexModel
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>ASP.NET - <span style="color: #ff69b4">PINK</span></h1>
+    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+    <p>
+        @Html.Partial("_ChangeTheme", Model)
+    </p>
+</div>
+
+@Html.Partial("_GettingStartedRow")

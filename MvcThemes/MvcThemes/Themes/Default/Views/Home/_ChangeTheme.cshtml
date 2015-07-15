@@ -1,0 +1,11 @@
+﻿@model MvcThemes.Models.Index.IndexModel
+
+@{
+    Layout = null;
+}
+
+@using (Html.BeginForm("ChangeTheme", "Home"))
+{
+    @Html.EnumDropDownListFor(x => x.Theme)
+    <input type="submit" class="btn btn-primary btn-lg" value="SELECT" />
+}

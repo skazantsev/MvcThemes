@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using MvcThemes.Business.Services;
+using MvcThemes.Theming;
+using MvcThemes.Theming.Services;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -16,6 +15,15 @@ namespace MvcThemes
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            RegisterViewEngines();
+        }
+
+        private void RegisterViewEngines()
+        {
+            ViewEngines.Engines.Clear();
+            ViewEngines.Engines.Add(
+                new ThemableRazorViewEngine(new ProfileThemeManager(Theme.Default.ToString(),
+                    new InMemoryProfileService())));
         }
     }
 }

@@ -3,20 +3,23 @@ using System.Web;
 
 namespace MvcThemes.Theming.Services
 {
-    public class SessionThemeManager : IThemeManager
+    public class SessionThemeManager : ThemeManagerBase
     {
         protected string ThemeKey = "Theme";
 
-        public string GetCurrentTheme()
+        public SessionThemeManager(string defaultTheme)
+            : base(defaultTheme)
+        { }
+
+        public override string GetCurrentTheme()
         {
             AssertSession();
-            if (HttpContext.Current.Session[ThemeKey] == null)
-                return string.Empty;
-
-            return HttpContext.Current.Session[ThemeKey].ToString();
+            return HttpContext.Current.Session[ThemeKey] != null
+                ? HttpContext.Current.Session[ThemeKey].ToString()
+                : DefaultTheme;
         }
 
-        public void SetCurrentTheme(string theme)
+        public override void SetCurrentTheme(string theme)
         {
             AssertSession();
             HttpContext.Current.Session[ThemeKey] = theme;

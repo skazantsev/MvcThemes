@@ -1,6 +1,4 @@
-﻿using MvcThemes.Theming;
-
-namespace MvcThemes.Business.Services
+﻿namespace MvcThemes.Business.Services
 {
     public class InMemoryProfileService : IProfileService
     {
@@ -11,7 +9,7 @@ namespace MvcThemes.Business.Services
             return Profile;
         }
 
-        public void SetTheme(Theme theme)
+        public void SetTheme(string theme)
         {
             Profile.Theme = theme;
         }

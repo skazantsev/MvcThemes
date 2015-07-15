@@ -1,5 +1,6 @@
 ﻿using MvcThemes.Business.Services;
 using MvcThemes.MvcExtensions;
+using MvcThemes.Theming;
 using MvcThemes.Theming.Services;
 using System.Web.Mvc;
 
@@ -11,7 +12,7 @@ namespace MvcThemes.Controllers
 
         public BaseController()
         {
-            ThemeManager = new ProfileThemeManager(new InMemoryProfileService());
+            ThemeManager = new ProfileThemeManager(Theme.Default.ToString(), new InMemoryProfileService());
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
