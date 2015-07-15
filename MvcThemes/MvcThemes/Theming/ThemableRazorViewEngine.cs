@@ -1,5 +1,6 @@
 ﻿using MvcThemes.Theming.Services;
 using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -7,42 +8,46 @@ namespace MvcThemes.Theming
 {
     public class ThemableRazorViewEngine : IViewEngine
     {
-        private readonly object _syncObj = new object();
-
         private readonly IThemeManager _themeManager;
 
-        private RazorViewEngine _lastThemableEngine;
-
-        private string _lastTheme;
+        private readonly ConcurrentDictionary<string, RazorViewEngine> _themeEngines; 
 
         public ThemableRazorViewEngine(IThemeManager themeManager)
         {
             _themeManager = themeManager;
+            _themeEngines = new ConcurrentDictionary<string, RazorViewEngine>();
         }
 
-        // TODO: cache it!
+        public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
+        {
+            var result = GetEngine().FindPartialView(controllerContext, partialViewName, useCache);
+            return result;
+        }
+
+        public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
+        {
+            var result = GetEngine().FindView(controllerContext, viewName, masterName, useCache);
+            return result;
+        }
+
+        public void ReleaseView(ControllerContext controllerContext, IView view)
+        {
+            GetEngine().ReleaseView(controllerContext, view);
+        }
+
         private RazorViewEngine GetEngine()
         {
-            lock (_syncObj)
+            var currentTheme = _themeManager.GetCurrentTheme();
+            var viewEngine = _themeEngines.GetOrAdd(currentTheme, _ =>
             {
-                var currentTheme = _themeManager.GetCurrentTheme();
-                if (_lastThemableEngine != null &&
-                    string.Equals(currentTheme, _lastTheme, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return _lastThemableEngine;
-                }
-
-                _lastThemableEngine = new RazorViewEngine();
-                _lastTheme = currentTheme;
-
-                FillMasterLocationFormats(_lastThemableEngine, currentTheme, _themeManager.DefaultTheme);
-                FillViewLocationFormats(_lastThemableEngine, currentTheme, _themeManager.DefaultTheme);
-                FillPartialViewLocationFormats(_lastThemableEngine, currentTheme, _themeManager.DefaultTheme);
-                return _lastThemableEngine;
-            }
+                var engine = new RazorViewEngine();
+                FillMasterLocationFormats(engine, currentTheme, _themeManager.DefaultTheme);
+                FillViewLocationFormats(engine, currentTheme, _themeManager.DefaultTheme);
+                FillPartialViewLocationFormats(engine, currentTheme, _themeManager.DefaultTheme);
+                return engine;
+            });
+            return viewEngine;
         }
-
-        #region Fill location formats helpers
 
         private void FillMasterLocationFormats(RazorViewEngine engine, string currentTheme, string defaultTheme)
         {
@@ -61,7 +66,7 @@ namespace MvcThemes.Theming
                 "~/Themes/" + currentTheme + "/Views/Shared/{0}.cshtml",
                 "~/Themes/" + currentTheme + "/Views/Shared/{1}/{0}.cshtml"
             }.Union(themeLocationFormats)
-                .Union(_lastThemableEngine.MasterLocationFormats)
+                .Union(engine.MasterLocationFormats)
                 .ToArray();
         }
 
@@ -78,7 +83,7 @@ namespace MvcThemes.Theming
                 {
                     "~/Themes/" + currentTheme + "/Views/{1}/{0}.cshtml"
                 }.Union(themeLocationFormats)
-                    .Union(_lastThemableEngine.ViewLocationFormats)
+                    .Union(engine.ViewLocationFormats)
                     .ToArray();
         }
 
@@ -99,27 +104,8 @@ namespace MvcThemes.Theming
                     "~/Themes/" + currentTheme + "/Views/Shared/{0}.cshtml",
                     "~/Themes/" + currentTheme + "/Views/Shared/{1}/{0}.cshtml"
                 }.Union(themeLocationFormats)
-                .Union(_lastThemableEngine.PartialViewLocationFormats)
+                .Union(engine.PartialViewLocationFormats)
                 .ToArray();
-        }
-
-        #endregion
-
-        public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
-        {
-            var result = GetEngine().FindPartialView(controllerContext, partialViewName, useCache);
-            return result;
-        }
-
-        public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
-        {
-            var result = GetEngine().FindView(controllerContext, viewName, masterName, useCache);
-            return result;
-        }
-
-        public void ReleaseView(ControllerContext controllerContext, IView view)
-        {
-            GetEngine().ReleaseView(controllerContext, view);
         }
     }
 }
