@@ -1,4 +1,4 @@
-# MvcThemes
+# MvcThemes [![Build status](https://ci.appveyor.com/api/projects/status/sda9wcvqjohgrlok?svg=true)](https://ci.appveyor.com/project/skazantsev/mvcthemes)
 
 The application demonstrates using themes in ASP.NET MVC for building customizable web applications.
 
