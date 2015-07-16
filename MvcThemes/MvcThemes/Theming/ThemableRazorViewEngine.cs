@@ -1,5 +1,4 @@
 ﻿using MvcThemes.Theming.Services;
-using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Web.Mvc;
@@ -41,23 +40,24 @@ namespace MvcThemes.Theming
             var viewEngine = _themeEngines.GetOrAdd(currentTheme, _ =>
             {
                 var engine = new RazorViewEngine();
-                FillMasterLocationFormats(engine, currentTheme, _themeManager.DefaultTheme);
-                FillViewLocationFormats(engine, currentTheme, _themeManager.DefaultTheme);
-                FillPartialViewLocationFormats(engine, currentTheme, _themeManager.DefaultTheme);
+                FillMasterLocationFormats(engine, _themeManager);
+                FillViewLocationFormats(engine, _themeManager);
+                FillPartialViewLocationFormats(engine, _themeManager);
                 return engine;
             });
             return viewEngine;
         }
 
-        private void FillMasterLocationFormats(RazorViewEngine engine, string currentTheme, string defaultTheme)
+        private void FillMasterLocationFormats(RazorViewEngine engine, IThemeManager themeManager)
         {
-            var themeLocationFormats = string.Equals(currentTheme, defaultTheme, StringComparison.InvariantCultureIgnoreCase)
+            var currentTheme = _themeManager.GetCurrentTheme();
+            var themeLocationFormats = themeManager.IsDefaultTheme
                 ? new string[0]
                 : new[]
                 {
-                    "~/Themes/" + defaultTheme + "/Views/{1}/{0}.cshtml",
-                    "~/Themes/" + defaultTheme + "/Views/Shared/{0}.cshtml",
-                    "~/Themes/" + defaultTheme + "/Views/Shared/{1}/{0}.cshtml"
+                    "~/Themes/" + themeManager.DefaultTheme + "/Views/{1}/{0}.cshtml",
+                    "~/Themes/" + themeManager.DefaultTheme + "/Views/Shared/{0}.cshtml",
+                    "~/Themes/" + themeManager.DefaultTheme + "/Views/Shared/{1}/{0}.cshtml"
                 };
 
             engine.MasterLocationFormats = new[]
@@ -70,13 +70,14 @@ namespace MvcThemes.Theming
                 .ToArray();
         }
 
-        private void FillViewLocationFormats(RazorViewEngine engine, string currentTheme, string defaultTheme)
+        private void FillViewLocationFormats(RazorViewEngine engine, IThemeManager themeManager)
         {
-            var themeLocationFormats = string.Equals(currentTheme, defaultTheme, StringComparison.InvariantCultureIgnoreCase)
+            var currentTheme = _themeManager.GetCurrentTheme();
+            var themeLocationFormats = themeManager.IsDefaultTheme
                 ? new string[0]
                 : new[]
                 {
-                    "~/Themes/" + defaultTheme + "/Views/{1}/{0}.cshtml"
+                    "~/Themes/" + themeManager.DefaultTheme + "/Views/{1}/{0}.cshtml"
                 };
 
             engine.ViewLocationFormats = new[]
@@ -87,15 +88,16 @@ namespace MvcThemes.Theming
                     .ToArray();
         }
 
-        private void FillPartialViewLocationFormats(RazorViewEngine engine, string currentTheme, string defaultTheme)
+        private void FillPartialViewLocationFormats(RazorViewEngine engine, IThemeManager themeManager)
         {
-            var themeLocationFormats = string.Equals(currentTheme, defaultTheme, StringComparison.InvariantCultureIgnoreCase)
+            var currentTheme = _themeManager.GetCurrentTheme();
+            var themeLocationFormats = themeManager.IsDefaultTheme
                 ? new string[0]
                 : new[]
                 {
-                    "~/Themes/" + defaultTheme + "/Views/{1}/{0}.cshtml",
-                    "~/Themes/" + defaultTheme + "/Views/Shared/{0}.cshtml",
-                    "~/Themes/" + defaultTheme + "/Views/Shared/{1}/{0}.cshtml"
+                    "~/Themes/" + themeManager.DefaultTheme + "/Views/{1}/{0}.cshtml",
+                    "~/Themes/" + themeManager.DefaultTheme + "/Views/Shared/{0}.cshtml",
+                    "~/Themes/" + themeManager.DefaultTheme + "/Views/Shared/{1}/{0}.cshtml"
                 };
 
             engine.PartialViewLocationFormats = new[]

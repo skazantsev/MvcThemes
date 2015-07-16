@@ -1,6 +1,4 @@
-﻿using MvcThemes.Business.Services;
-using MvcThemes.Theming;
-using MvcThemes.Theming.Services;
+﻿using MvcThemes.Theming;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -21,9 +19,7 @@ namespace MvcThemes
         private void RegisterViewEngines()
         {
             ViewEngines.Engines.Clear();
-            ViewEngines.Engines.Add(
-                new ThemableRazorViewEngine(new ProfileThemeManager(Theme.Default.ToString(),
-                    new InMemoryProfileService())));
+            ViewEngines.Engines.Add(new ThemableRazorViewEngine(ServiceRegistry.ThemeManager));
         }
     }
 }

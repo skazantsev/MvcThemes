@@ -1,6 +1,4 @@
-﻿using MvcThemes.Business.Services;
-using MvcThemes.MvcExtensions;
-using MvcThemes.Theming;
+﻿using MvcThemes.MvcExtensions;
 using MvcThemes.Theming.Services;
 using System.Web.Mvc;
 
@@ -11,13 +9,18 @@ namespace MvcThemes.Controllers
         protected readonly IThemeManager ThemeManager;
 
         public BaseController()
+            : this(ServiceRegistry.ThemeManager)
         {
-            ThemeManager = new ProfileThemeManager(Theme.Default.ToString(), new InMemoryProfileService());
+        }
+
+        public BaseController(IThemeManager themeManager)
+        {
+            ThemeManager = themeManager;
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            ViewData[ViewDataKeys.CurrentTheme] = ThemeManager.GetCurrentTheme();
+            ViewData[ViewDataKeys.CurrentTheme] = ServiceRegistry.ThemeManager.GetCurrentTheme();
         }
     }
 }

@@ -24,7 +24,8 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ThemableImage("~/Content/images/apple.jpg", new { alt = "apple", height = "48" });
+                @Html.ActionLink("MVC Themes", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -32,6 +33,10 @@
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
+                @Html.ThemableImage("~/Content/images/apple.jpg", new { alt = "apple", height = "48" });
+                @Html.ThemableImage("~/Content/images/apple.jpg", new { alt = "apple", height = "48" });
+                @Html.ThemableImage("~/Content/images/apple.jpg", new { alt = "apple", height = "48" });
+                @Html.ThemableImage("~/Content/images/apple.jpg", new { alt = "apple", height = "48" });
             </div>
         </div>
     </div>

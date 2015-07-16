@@ -110,9 +110,11 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\ServiceRegistry.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Business\Profile.cs" />
     <Compile Include="Models\Index\IndexModel.cs" />
+    <Compile Include="MvcExtensions\HtmlExtentions.cs" />
     <Compile Include="MvcExtensions\ViewDataKeys.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -132,6 +134,9 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\images\apple.green.jpg" />
+    <Content Include="Content\images\apple.jpg" />
+    <Content Include="Content\images\apple.pink.jpg" />
     <Content Include="Content\theme-default.css" />
     <Content Include="Content\theme-green.css" />
     <Content Include="Content\theme-pink.css" />

@@ -4,6 +4,8 @@
     {
         string DefaultTheme { get; }
 
+        bool IsDefaultTheme { get; }
+
         string GetCurrentTheme();
 
         void SetCurrentTheme(string theme);
